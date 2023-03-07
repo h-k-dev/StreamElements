@@ -1,0 +1,88 @@
+{
+  "shiroCellColor": {
+    "type": "colorpicker",
+    "label": "Shiro Cell Color",
+    "value": "rgba(0, 0, 0, 0.5)",
+    "group": "Text Setting"
+  },
+  "shiroTextColor": {
+    "type": "colorpicker",
+    "label": "Shiro Text Color",
+    "value": "rgba(255, 255, 255, 0.5)",
+    "group": "Text Setting"
+  },
+  "kuroCellColor": {
+    "type": "colorpicker",
+    "label": "Kuro Cell Color",
+    "value": "rgba(255, 255, 255, 0.5)",
+    "group": "Text Setting"
+  },
+  "kuroTextColor": {
+    "type": "colorpicker",
+    "label": "Kuro Text Color",
+    "value": "rgba(0, 0, 0, 0.5)",
+    "group": "Text Setting"
+  },
+  "fontSize": {
+    "type": "number",
+    "label": "Font Size",
+    "value": 12,
+    "min": 12,
+    "max": 100,
+    "step": 1,
+    "group": "Text Setting"
+  },
+  "fontWeight": {
+    "type": "number",
+    "label": "Chat Message Weighte",
+    "value": 100,
+    "min": 100,
+    "max": 900,
+    "step": 100,
+    "group": "Text Setting"
+  },
+  "chatFont": {
+    "type": "googleFont",
+    "label": "Select a font:",
+    "value": "Roboto",
+    "group": "Text Setting"
+  },
+  "textShadow": {
+    "type": "text",
+    "label": "Text shadow",
+    "value": "rgb(0, 0, 0) 1px 1px 1px",
+    "group": "Text Setting"
+  },
+  "paddingTop": {
+    "type": "number",
+    "label": "Padding Top",
+    "min": 0,
+    "step": 0.5,
+    "group": "Geometry",
+    "value": 15
+  },
+  "paddingBot": {
+    "type": "number",
+    "label": "Padding Bottom",
+    "min": 0,
+    "step": 0.5,
+    "group": "Geometry",
+    "value": 15
+  },
+  "paddingLeft": {
+    "type": "number",
+    "label": "Padding Left",
+    "min": 0,
+    "step": 0.5,
+    "group": "Geometry",
+    "value": 15
+  },
+  "paddingRight": {
+    "type": "number",
+    "label": "Padding Right",
+    "min": 0,
+    "step": 0.5,
+    "group": "Geometry",
+    "value": 15
+  }
+}
