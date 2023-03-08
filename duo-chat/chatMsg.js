@@ -63,12 +63,12 @@ let testData = {
 }
 
 
-
 class chatMsg {
-	constructor(data, emoteCss, bionicCss, typographyCss) {
+	constructor(data, emoteCss, bionicCss, typographyCss, computationCss) {
 		// Css
-		this.data = data
-		this.typographyCss = typographyCss
+		this.data = data;
+		this.computationCss = computationCss;
+		this.typographyCss = typographyCss;
 		this.emoteCss = emoteCss;
 		this.bionicCss = bionicCss;
 		
@@ -86,6 +86,7 @@ class chatMsg {
 		if (data.emotes.length === 0) {	
 			this._msg.push(data.text);
 			this.trueStrIdx.push(0);
+			return
 		};
 	  
 		// With emotes
@@ -148,19 +149,20 @@ class chatMsg {
 
 	get numLines() {
 		let numLines,
+			lineHeight,
+			height,
 			computationDiv = document.createElement("div");			
 		document.body.appendChild(computationDiv);
 		
 		// Style
 		computationDiv.classList.add(this.typographyCss);
-		computationDiv.style.visibility = "hidden";
-		computationDiv.style.zIndex = "-1";
+		computationDiv.classList.add(this.computationCss);
 		computationDiv.innerHTML = this.asHTML;
 		lineHeight = parseFloat(window.getComputedStyle(computationDiv).lineHeight);
 		height = parseInt(window.getComputedStyle(computationDiv).height);
 		numLines = height / lineHeight;
 	  
-		document.body.removeChild(testDiv);
+		document.body.removeChild(computationDiv);
 		return numLines;
 	};
 
@@ -189,6 +191,3 @@ class chatMsg {
 	get nick() {return this.data.nick}
 	get displayName() {return this.data.displayName};
 };
-
-const t = new chatMsg(testData, "haha", "hoho")
-console.log(t.hasText)
