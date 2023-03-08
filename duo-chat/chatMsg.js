@@ -146,6 +146,25 @@ class chatMsg {
 	};
 
 
+	get numLines() {
+		let numLines,
+			computationDiv = document.createElement("div");			
+		document.body.appendChild(computationDiv);
+		
+		// Style
+		computationDiv.classList.add(this.typographyCss);
+		computationDiv.style.visibility = "hidden";
+		computationDiv.style.zIndex = "-1";
+		computationDiv.innerHTML = this.asHTML;
+		lineHeight = parseFloat(window.getComputedStyle(computationDiv).lineHeight);
+		height = parseInt(window.getComputedStyle(computationDiv).height);
+		numLines = height / lineHeight;
+	  
+		document.body.removeChild(testDiv);
+		return numLines;
+	};
+
+
 	get asHTML() {
 		for (let i = 0; i < this.trueStrIdx.length; i++) {
 			let idx = this.trueStrIdx[i];
@@ -165,7 +184,7 @@ class chatMsg {
 		return false;
 	}
 
-	
+
 	get userId() {return this.data.userId};
 	get nick() {return this.data.nick}
 	get displayName() {return this.data.displayName};
