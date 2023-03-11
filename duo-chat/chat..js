@@ -1,14 +1,14 @@
 class Chat {
-/** 
- * @param {obj} - All below param are incl. in the object as `property`
- * @param {string} paddingCss 
- * @param {string}	paddingCss - string.
- * @param {string}	scrollCss - TO DO.
- * @param {string}	msgCss - TO DO.
- * @param {string}	typographyCss - TO DO.
- * @param {string}	computationCss - TO DO.
- * 
- * */ 
+	/** 
+	 * @param {obj} - All below param are incl. in the object as `property`
+	 * @param {string} paddingCss 
+	 * @param {string} paddingCss - string.
+	 * @param {string} scrollCss - TO DO.
+	 * @param {string} msgCss - TO DO.
+	 * @param {string} typographyCss - TO DO.
+	 * @param {string} computationCss - TO DO.
+	 * 
+	 * */ 
 	constructor(obj)
  	{
 		// Parent container
