@@ -9,7 +9,7 @@ class Chat {
  * @param {string} computationCss - TO DO.
  * */ 
 	constructor(obj)
- 	{	
+		{	
 		// Parent container
 		this.container = document.getElementById(obj["containerId"]);
 
@@ -20,7 +20,9 @@ class Chat {
 
 		// Computation relevant elements.
 		this.computor = document.createElement("div")
-		this.lineHeight = null
+		this.lineHeight = null;
+		this.maxNumlines = null;
+		this.maxLinesHeight = null;
 
 		// Auto Invoke
 		this.adjustContainer(obj);
@@ -30,7 +32,7 @@ class Chat {
 	};
 
 
-	adjustContainer(obj) 
+	adjustContainer(obj)
 	{	
 		// Display relevant elements.
 		this.padding.classList.add(obj["paddingCss"]);
@@ -56,11 +58,11 @@ class Chat {
 		
 		// Get and adjust
 		this.lineHeight = this.getcAtr(this.computor, "line-height");
-      	this.lineHeight = Math.ceil(parseFloat(this.lineHeight));
- 		
-      	// Update style
-      	document.querySelector(':root').style.setProperty(
-			"--line-height", this.lineHeight / (fontSize * (4 / 3)));
+			this.lineHeight = Math.ceil(parseFloat(this.lineHeight));
+			
+		// Update style
+		document.querySelector(':root').style.setProperty(
+		"--line-height", this.lineHeight / (fontSize * (4 / 3)));
 	};
 
 
@@ -68,37 +70,61 @@ class Chat {
 		const testStr = "W".repeat(maxNumChar);
 		const paddingTop = parseInt(this.getcAtr(this.padding, "padding-top"));
 		const paddingBot = parseInt(this.getcAtr(this.padding, "padding-bottom"));
-		let height, maxHeight;
-
+		let height;
+		
+		// Adding testing content
 		this.computor.innerHTML = testStr;
-		height = parseInt(this.computor, "height") - paddingTop - paddingBot;
-		maxHeight = Math.floor(height / this.lineHeight)
-		document.querySelector(':root').style.setProperty(
-			"--max-height", string(maxHeight) + "px");
+
+		height = this.computor.clientHeight - paddingTop - paddingBot;
+		this.maxNumlines = Math.floor(height / this.lineHeight);
+		this.maxLinesHeight = this.maxNumlines * this.lineHeight;
+      	
+		this.computor.style.maxheight = String(this.maxLinesHeight) + "px";
+		this.padding.style.maxHeight = String(this.maxLinesHeight) + "px";
 	};
 
 
-	calNumLines(msg) {
-		let numLines, height;			
+	analyze(msg) {
+		let scrollHeight;			
 
-		computationDiv.innerHTML = msg.asHTML;
-		height = parseInt(this.getcAtr(this.computor, height));
-		numLines = height / this.lineHeight;
-
-		return numLines;
+		this.computor.innerHTML = msg.asHTML;
+		scrollHeight = this.computor.scrollHeight;
+		
+		msg.numLines = Math.floor(scrollHeight / this.lineHeight);
+		msg.numScroll = Math.floor(scrollHeight / this.maxLinesHeight - 1);
 	};
-	
 
-	adjustStyle() { this.computeLineHeight() };
-	
+
+	calNumScroll(msg) {
+
+	}
+
 	
 	getcAtr(element, attribute) {
-		window.getComputedStyle(element).getPropertyValue(attribute)
+		return window.getComputedStyle(element).getPropertyValue(attribute)
 	};
 
 
-	enqueue(message) { this.queue.push(message) };
+	enqueue(msg) {
+		msg.numLines = this.calNumLines(msg);
 
+		if (this.queue.length > 0) {
+			this.queue.push(message);
+		} else {
+			this.dequeue(msg)
+		};
+	};
+
+
+	dequeue(msg = null) {
+		if (msg) {
+			this.msg.innerHTML = msg.asHTML;
+		};
+
+		if (this.queue.length > 0) {
+			this.dequeue(this.queue.shift());
+		};
+	};
 
 	retriggerAnimation(element, in_, out_) {
 	/**

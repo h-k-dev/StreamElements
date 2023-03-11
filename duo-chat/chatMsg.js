@@ -29,7 +29,7 @@ let testData = {
 		}
 	],
 	"channel": "channelname",
-	"text": "Test Kappa test Kappa test",
+	"text": "Why Kappa test Kappa test",
 	"isAction": false,
 	"emotes": [
 		{
@@ -65,6 +65,13 @@ let testData = {
 
 class chatMsg {
 	constructor(data, emoteCss, bionicCss, typographyCss) {
+		//
+		this.numLines = null;
+		this.numScroll = null;
+		this.scrollStart = null;
+		this.scrollEnd = null;
+		this.scrollDuration = null;
+		
 		// Css
 		this.data = data;
 		this.typographyCss = typographyCss;
@@ -74,6 +81,7 @@ class chatMsg {
 		// Compute
 		this._msg = []
 		this.trueStrIdx = []
+		this.asHTML = null
 		
 		// Auto Invoke
 		this.separateEmote(data);
@@ -81,10 +89,13 @@ class chatMsg {
 
 
 	separateEmote(data) {
+		if (this.asHTML) return;
+
 		// No emotes
 		if (data.emotes.length === 0) {	
 			this._msg.push(data.text);
 			this.trueStrIdx.push(0);
+			this.toHTML();
 			return
 		};
 	  
@@ -114,6 +125,8 @@ class chatMsg {
 		  	this._msg.push(data.text.slice(lastEnd, data.text.length));
 			this.trueStrIdx.push(idx);
 		};
+
+		this.toHTML();
 	};
 
 
@@ -146,7 +159,7 @@ class chatMsg {
 	};
 
 
-	get asHTML() {
+	toHTML() {
 		for (let i = 0; i < this.trueStrIdx.length; i++) {
 			let idx = this.trueStrIdx[i];
 			if (this.bionicCss) {
@@ -156,7 +169,7 @@ class chatMsg {
 			};
 		};
 
-		return this._msg.join("");
+		this.asHTML = this._msg.join("");
 	};
 
 
@@ -170,3 +183,9 @@ class chatMsg {
 	get nick() {return this.data.nick}
 	get displayName() {return this.data.displayName};
 };
+
+function whatever() {
+	const msg = new chatMsg(testData, "emote", "bionic", "typography");
+};
+
+whatever();

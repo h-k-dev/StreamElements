@@ -2,50 +2,39 @@
 @import url('https://fonts.googleapis.com/css?family={{chatFont}}');
 
 :root {
-  /* Gap [Grid Column Gap] The gap between the chat unit*/
-  --gap: 0.25em;
-  
-  /* Height of wrapper*/
-  --wrapper-height: calc((28 / 24) * {{fontSize}} * 2 + var(--gap));
-  
-
+  --scroll-start: 0px;
+  --scroll-end: 0px;
+  --scroll-duration: 0.5s;
+  --lovely-rgb: rgba(43, 42, 41, 0.8);
+  --line-height: calc(28 / 24);
+  --max-height: 100%;
 }
 
 
 body {
-  	height: 100vh;
-  	margin: 0;
+  	margin: 0; 
+}
+
+.container {
 }
 
 
-.duochat-wrapper {
-  display: grid;
-  row-gap: var(--gap);
-  grid-column-start: 1;
-  grid-column-end: 2;
-  grid-row-start: 1;
-  grid-row-end: 3;
-  
-  
-  margin-top: 15px;
-  width: 100%;
-  height: var(--wrapper-height);
+.computation {
+  	position: absolute;
+  	z-index: -1;
+  	max-height: 100%;
 }
 
-.shiro-warpper {
-}
 
-.kuro-wrapper{
-}
-
-.msg-typography {
+.typography {
+  /* Typography */
   font-size: {{fontSize}}pt;
   font-family: {{chatFont}};
-  line-height: calc((28 / 24));
   font-weight: bold;
+  line-height: var(--line-height);
   
-  padding-left: 2em;
-  padding-right: 1em;
+  /* Geometry */
+  padding: 0px 1em 0px 1em;
   
   /* Overflow */
   overflow-wrap: break-word;
@@ -54,55 +43,65 @@ body {
 }
 
 
-.msg-kuro, .msg-shiro{
-  display: inline-block;
+
+.padding {
+  /* Positioning */
+  display: inline-flex;
   float: right;
   
-  /* Geometry */
-  padding-top: 0.375em;
-  padding-bottom: 0.375em;
+  /*Geometry */
+  padding-top: {{paddingTop}}px;
+  padding-bottom: {{paddingBot}}px;
   
-  /* Animation */
-  transition: all .5s ease-in-out;
+  /*Dimension */
+  max-height: 100px;
+  max-width: {{maxWidth}}%;
+  
+  /*Coloringg */ 
+  background-color: red;
+  box-shadow: 0 0 10px {{shadowGlow}};
+  border-radius: 20px;
+  
+  /*overflow */
+  overflow: hidden;
 }
 
 
-.msg-shiro {
-  border-top-left-radius: 80px 100px;
-  
-  color: {{shiroTextColor}};
-  background-color: {{shiroCellColor}};
-  box-shadow: inset -0.1em 0em 0.05em 0em {{kuroCellColor}};
+.scroll {
+  display: inline-flex;
+  flex: 0 auto;
+
+  height: 100%;
+  flex-direction: row-reverse;
+  background-color: blue;
+
+  overflow: hidden;
 }
 
 
-.msg-kuro {
-  border-bottom-left-radius: 80px 90px;
-  color: {{kuroTextColor}};
-  background-color: {{kuroCellColor}};
-  box-shadow: inset -0.1em 0em 0em 0em {{kuroCellColor}};
+.message {
+  display: inline-block;
+  flex: 0 auto;
   
+  color: {{chatMsgColor}};
 }
 
 
 .bionic {
   /* Typography */
-  font-size: {{fontSize}}pt;
-  font-family: {{googleFont}};
-  line-height: calc(28 / 24);
-  font-weight: normal;
-  
-  opacity: 50%;
+  font-weight: normal; 
+  opacity: 65%
 }
 
 
 .emote {
-  display: inline-block;
+  vertical-align: middle;
   background-repeat: no-repeat;
 }
 
 
-/* Animmation */
+
+
 .blend-in {
   animation: In 500ms ease;
   animation-fill-mode: forwards;
@@ -115,11 +114,21 @@ body {
 }
 
 
+.scroll-down {
+  animation: auto-scroll var(--scroll-duration) ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+
+@keyframes auto-scroll {
+  0% {margin-top: var(--scroll-start)}
+  100% {margin-top: var(--scroll-end)}
+}
+
 @keyframes In {
   0% {opacity: 0%}
   100% {opacity: 100%}
 }
-
 
 @keyframes Out {
   0% {opacity: 100%}
