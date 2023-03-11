@@ -64,6 +64,20 @@ class Chat {
 	};
 
 
+	computeMaxHeight(maxNumChar = 500) {
+		const testStr = "W".repeat(maxNumChar);
+		const paddingTop = parseInt(this.getcAtr(this.padding, "padding-top"));
+		const paddingBot = parseInt(this.getcAtr(this.padding, "padding-bottom"));
+		let height, maxHeight;
+
+		this.computor.innerHTML = testStr;
+		height = parseInt(this.computor, "height") - paddingTop - paddingBot;
+		maxHeight = Math.floor(height / this.lineHeight)
+		document.querySelector(':root').style.setProperty(
+			"--max-height", string(maxHeight) + "px");
+	};
+
+
 	calNumLines(msg) {
 		let numLines, height;			
 
@@ -73,8 +87,10 @@ class Chat {
 
 		return numLines;
 	};
-
-
+	
+	adjustStyle() {
+		this.computeLineHeight();
+	}
 	getcAtr(element, attribute)
 	{
 		window.getComputedStyle(element).getPropertyValue(attribute);
@@ -85,4 +101,17 @@ class Chat {
 	{
 		this.queue.push(message)
 	}
+
+	retriggerAnimation(element, in_, out_) {
+	/**
+	 * As stated in the name, this trigger an animation by remove and
+	 * re-adding the "css-animation-class". "in_" and "out_" can be
+	 * one and the same. The main purpose is to re/-trigger an animation.
+	 * @param {string} in_ - Name of the animation to be triggered.
+	 * @param {string} out_ - Name of the animation to be used for flow trigger.
+	 */
+		element.classList.remove(out_);
+		void element.offsetHeight;
+		element.classList.add(in_);
+	};
 };
