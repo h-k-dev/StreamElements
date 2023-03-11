@@ -7,7 +7,7 @@ class Chat {
 	 * @param {string} msgCss - TO DO.
 	 * @param {string} typographyCss - TO DO.
 	 * @param {string} computationCss - TO DO.
-	 * 
+	 * s
 	 * */ 
 	constructor(obj)
  	{
