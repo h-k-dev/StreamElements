@@ -1,46 +1,72 @@
 class Chat {
-	constructor(containerId,  paddingCss, scrollCss, msgCss, typographyCss) {
+/** 
+ * @param {obj} - All below param are incl. in the object as `property`
+ * @param {string} paddingCss 
+ * @param {string}	paddingCss - string.
+ * @param {string}	scrollCss - TO DO.
+ * @param {string}	msgCss - TO DO.
+ * @param {string}	typographyCss - TO DO.
+ * @param {string}	computationCss - TO DO.
+ * 
+ * */ 
+	constructor(obj)
+ 	{
 		// Parent container
-		this.container = document.getElementById(containerId);
+		this.container = document.getElementById(obj[containerId]);
 
-		// Style
+		// Main containers
 		this.padding = document.createElement("div");
 		this.scroll = document.createElement("div");
 		this.msg = document.createElement("div");
 
+		// Computation
+		this.computor = document.createElement("div")
+		this.lineHeight = null
+
 		// Auto Invoke
-		this.adjustContainer(paddingCss, scrollCss, msgCss, typographyCss);
+		this.adjustContainer(obj);
 
 		// Messagge queue
 		this.queue = [];
 	};
 
 
-	adjustContainer(paddingCss, scrollCss,  msgCss, typographyCss) {
+	adjustContainer(obj) 
+	{	
 		// Class
-		this.padding.classList.add(paddingCss);
-		this.scroll.classList.add(scrollCss);
-		this.msg.classList.add(msgCss);
-		this.msg.classList.add(typographyCss);
-
-		// ID
-		this.padding.setAttribute("id", "padding");
-		this.scroll.setAttribute("id", "scroll");
-		this.msg.setAttribute("id", "msg");
+		this.padding.classList.add(obj[paddingCss]);
+		this.scroll.classList.add(obj[scrollCss]);
+		this.msg.classList.add(obj[msgCss]);
+		this.msg.classList.add(obj[typographyCss]);
+		this.computor.classList.add(obj[computationCss], obj[typographyCss]);
 
 		// Nesting
 		this.scroll.appendChild(this.msg);
 		this.padding.appendChild(this.scroll);
-		this.container.appendChild(this.padding)
+		this.container.appendChild(this.padding);
+		document.body.appendChild(this.computor);
 	};
 
 
-	getAtr(element, attribute) {
+	calNumLines(msg) {
+		let numLines, lineHeight, height;			
+
+		computationDiv.innerHTML = msg.asHTML;
+		height = parseInt(this.getcAtr(this.computor, height));
+		numLines = height / this.lineHeight;
+
+		return numLines;
+	};
+
+
+	getcAtr(element, attribute)
+	{
 		window.getComputedStyle(element).getPropertyValue(attribute);
 	};
 
 
-	enqueue(message) {
+	enqueue(message)
+	{
 		this.queue.push(message)
 	}
 };

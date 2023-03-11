@@ -64,10 +64,9 @@ let testData = {
 
 
 class chatMsg {
-	constructor(data, emoteCss, bionicCss, typographyCss, computationCss) {
+	constructor(data, emoteCss, bionicCss, typographyCss) {
 		// Css
 		this.data = data;
-		this.computationCss = computationCss;
 		this.typographyCss = typographyCss;
 		this.emoteCss = emoteCss;
 		this.bionicCss = bionicCss;
@@ -144,26 +143,6 @@ class chatMsg {
 		return str.replace(/[<>"^]/g, function (str) {
 			return "&#" + str.charCodeAt(0) + ";";
 		});
-	};
-
-
-	get numLines() {
-		let numLines,
-			lineHeight,
-			height,
-			computationDiv = document.createElement("div");			
-		document.body.appendChild(computationDiv);
-		
-		// Style
-		computationDiv.classList.add(this.typographyCss);
-		computationDiv.classList.add(this.computationCss);
-		computationDiv.innerHTML = this.asHTML;
-		lineHeight = parseFloat(window.getComputedStyle(computationDiv).lineHeight);
-		height = parseInt(window.getComputedStyle(computationDiv).height);
-		numLines = height / lineHeight;
-	  
-		document.body.removeChild(computationDiv);
-		return numLines;
 	};
 
 
