@@ -88,19 +88,17 @@ class Chat {
 		return numLines;
 	};
 	
-	adjustStyle() {
-		this.computeLineHeight();
-	}
-	getcAtr(element, attribute)
-	{
-		window.getComputedStyle(element).getPropertyValue(attribute);
+
+	adjustStyle() { this.computeLineHeight() };
+	
+	
+	getcAtr(element, attribute) {
+		window.getComputedStyle(element).getPropertyValue(attribute)
 	};
 
 
-	enqueue(message)
-	{
-		this.queue.push(message)
-	}
+	enqueue(message) { this.queue.push(message) };
+
 
 	retriggerAnimation(element, in_, out_) {
 	/**
