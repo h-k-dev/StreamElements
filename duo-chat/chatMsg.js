@@ -69,8 +69,8 @@ class chatMsg {
 		this.numLines = null;
 		this.numScroll = null;
 		this.scrollStart = null;
-		this.scrollEnd = null;
-		this.scrollDuration = null;
+		this.scrollEnd = 0;
+		this.lifeSpan = null;
 		
 		// Css
 		this.data = data;
@@ -187,5 +187,3 @@ class chatMsg {
 function whatever() {
 	const msg = new chatMsg(testData, "emote", "bionic", "typography");
 };
-
-whatever();

@@ -8,8 +8,7 @@ class Chat {
  * @param {string} typographyCss - TO DO.
  * @param {string} computationCss - TO DO.
  * */ 
-	constructor(obj)
-		{	
+	constructor(obj) {	
 		// Parent container
 		this.container = document.getElementById(obj["containerId"]);
 
@@ -20,6 +19,8 @@ class Chat {
 
 		// Computation relevant elements.
 		this.computor = document.createElement("div")
+
+		// Computed Attr
 		this.lineHeight = null;
 		this.maxNumlines = null;
 		this.maxLinesHeight = null;
@@ -52,17 +53,16 @@ class Chat {
 	};
 
 
-	computeLineHeight(fontSize = null) {
-		if (fontSize === null) {
-			const fontSize = parseInt(this.getcAtr(this.computor, this.fontSize))};
+	computeLineHeight() {
+		const fontSize = parseFloat(this.getcAtr(this.computor, "font-size"));
 		
-		// Get and adjust
+			// Get and adjust
 		this.lineHeight = this.getcAtr(this.computor, "line-height");
-			this.lineHeight = Math.ceil(parseFloat(this.lineHeight));
+		this.lineHeight = Math.ceil(parseFloat(this.lineHeight));
 			
 		// Update style
 		document.querySelector(':root').style.setProperty(
-		"--line-height", this.lineHeight / (fontSize * (4 / 3)));
+		"--line-height", this.lineHeight / fontSize);
 	};
 
 
@@ -78,7 +78,7 @@ class Chat {
 		height = this.computor.clientHeight - paddingTop - paddingBot;
 		this.maxNumlines = Math.floor(height / this.lineHeight);
 		this.maxLinesHeight = this.maxNumlines * this.lineHeight;
-      	
+			
 		this.computor.style.maxheight = String(this.maxLinesHeight) + "px";
 		this.padding.style.maxHeight = String(this.maxLinesHeight) + "px";
 	};
@@ -92,13 +92,45 @@ class Chat {
 		
 		msg.numLines = Math.floor(scrollHeight / this.lineHeight);
 		msg.numScroll = Math.floor(scrollHeight / this.maxLinesHeight - 1);
+		msg.scrollStart = this.maxLinesHeight * -1;
 	};
 
 
-	calNumScroll(msg) {
-
-	}
-
+	autoScroll(numScroll) {
+		/**
+		 * Automatically scroll down the content, here "text".
+		 * @param {number} numRepeat: the amount of times to scroll
+		 */
+		let dur = parseFloat(docComp.getPropertyValue("--scroll-duration")),
+		curStart, curEnd, newNumRepeat;
+	
+		if (numRepeat > 0) {
+			// Update start and end location
+			if (prevStart === 0 && prevEnd === 0) {
+			curStart = scrollStart;
+			curEnd = scrollEnd;
+			} else {
+			curStart = prevStart + heightMaxNumLines;
+			curEnd = prevEnd + heightMaxNumLines;
+		};
+	
+		// Negative top margin-top to scroll
+		curStart *= -1;
+		curEnd *= -1;
+	
+		setCssVar({
+			'--scroll-start': String(msg.scrollStart) + "px",
+			'--scroll-end': String(msg.scrollEnd) + "px"
+		});
+	
+		// Trigger the predefined css-animation
+		retriggerAnimation(msgContainer, "scroll-down", "scroll-down");
+		numRepeat--;
+		window.setTimeout(autoScroll, baseStayDuration + 30 * 5 + scrollDuration, numRepeat)
+		} else {
+		window.setTimeout(idle, baseStayDuration + 30 * 5)
+		};
+	};
 	
 	getcAtr(element, attribute) {
 		return window.getComputedStyle(element).getPropertyValue(attribute)
@@ -106,17 +138,18 @@ class Chat {
 
 
 	enqueue(msg) {
-		msg.numLines = this.calNumLines(msg);
-
+		this.analyze(msg)
 		if (this.queue.length > 0) {
 			this.queue.push(message);
 		} else {
-			this.dequeue(msg)
+			this.peak(msg)
 		};
 	};
 
 
-	dequeue(msg = null) {
+	peak() {
+		const msg = this.queue[0];
+
 		if (msg) {
 			this.msg.innerHTML = msg.asHTML;
 		};
@@ -125,6 +158,7 @@ class Chat {
 			this.dequeue(this.queue.shift());
 		};
 	};
+
 
 	retriggerAnimation(element, in_, out_) {
 	/**
@@ -137,5 +171,13 @@ class Chat {
 		element.classList.remove(out_);
 		void element.offsetHeight;
 		element.classList.add(in_);
+	};
+
+
+	setCssVar(obj) {
+		const doc = document.documentElement;
+		for (const [varible, value] in Object.entries(obj)) {
+			doc.style.setProperty(varible, value);
+		}
 	};
 };
