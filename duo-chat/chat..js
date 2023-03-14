@@ -30,6 +30,10 @@ class Chat {
 
 		// Messagge queue
 		this.queue = [];
+		
+		// States
+		this.curMsg = null;
+		this.idleTimer = null;
 	};
 
 
@@ -96,68 +100,60 @@ class Chat {
 	};
 
 
-	autoScroll(numScroll) {
-		/**
-		 * Automatically scroll down the content, here "text".
-		 * @param {number} numRepeat: the amount of times to scroll
-		 */
-		let dur = parseFloat(docComp.getPropertyValue("--scroll-duration")),
-		curStart, curEnd, newNumRepeat;
-	
-		if (numRepeat > 0) {
-			// Update start and end location
-			if (prevStart === 0 && prevEnd === 0) {
-			curStart = scrollStart;
-			curEnd = scrollEnd;
-			} else {
-			curStart = prevStart + heightMaxNumLines;
-			curEnd = prevEnd + heightMaxNumLines;
-		};
-	
-		// Negative top margin-top to scroll
-		curStart *= -1;
-		curEnd *= -1;
-	
-		setCssVar({
-			'--scroll-start': String(msg.scrollStart) + "px",
-			'--scroll-end': String(msg.scrollEnd) + "px"
-		});
-	
-		// Trigger the predefined css-animation
-		retriggerAnimation(msgContainer, "scroll-down", "scroll-down");
-		numRepeat--;
-		window.setTimeout(autoScroll, baseStayDuration + 30 * 5 + scrollDuration, numRepeat)
-		} else {
-		window.setTimeout(idle, baseStayDuration + 30 * 5)
-		};
-	};
-	
-	getcAtr(element, attribute) {
-		return window.getComputedStyle(element).getPropertyValue(attribute)
-	};
+	autoScroll() {
+		if (this.curMsg.numScroll === 0) return;
 
+		this.curMsg.numScroll -= 1;
+		this.curMsg.scrollStart -= this.maxLinesHeight;
+		this.curMsg.scrollEnd -= this.maxLinesHeight;
+
+		this.setCssVar({
+			"--scroll-start": String(this.curMsg.scrollStart) + "px";
+			"--scroll-end":  String(this.curMsg.scrollEnd) + "px";
+		})
+
+		this.idleTimer = window.setTimeout(this.autoScroll, 5000);
+	};
+	
 
 	enqueue(msg) {
 		this.analyze(msg)
-		if (this.queue.length > 0) {
-			this.queue.push(message);
-		} else {
-			this.peak(msg)
+		this.queue.push(msg);
+		
+		if (this.curMsg === null) {
+			clearTimeout(this.idleTimer);
+			this.peak()
 		};
 	};
 
 
 	peak() {
-		const msg = this.queue[0];
+		this.curMsg = this.queue[0];
 
-		if (msg) {
-			this.msg.innerHTML = msg.asHTML;
+		if (this.curMsg) {
+			this.curMsg.innerHTML = this.curMsg.asHTML;
+			this.retriggerAnimation(this.padding, "blend-in", "blend-out");
+			this.autoScroll()
 		};
 
+	};
+
+
+	dequeue() {
+		
 		if (this.queue.length > 0) {
-			this.dequeue(this.queue.shift());
+			this.queue.shift();
+			this.peak();
+		} else {
+			this.curMsg = null;
+			this.idleTimer = window.setTimeout(this.idle, 5000);
 		};
 	};
+
+
+	idle() {
+		this.retriggerAnimation(this.padding, "blend-out", "blend-in");
+	}
 
 
 	retriggerAnimation(element, in_, out_) {
@@ -171,6 +167,11 @@ class Chat {
 		element.classList.remove(out_);
 		void element.offsetHeight;
 		element.classList.add(in_);
+	};
+
+
+	getcAtr(element, attribute) {
+		return window.getComputedStyle(element).getPropertyValue(attribute)
 	};
 
 
