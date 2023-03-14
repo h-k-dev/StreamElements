@@ -183,7 +183,3 @@ class chatMsg {
 	get nick() {return this.data.nick}
 	get displayName() {return this.data.displayName};
 };
-
-function whatever() {
-	const msg = new chatMsg(testData, "emote", "bionic", "typography");
-};

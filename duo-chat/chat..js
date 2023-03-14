@@ -18,7 +18,7 @@ class Chat {
 		this.msg = document.createElement("div");
 
 		// Computation relevant elements.
-		this.computor = document.createElement("div")
+		this.computor = document.createElement("div");
 
 		// Computed Attr
 		this.lineHeight = null;
@@ -33,7 +33,7 @@ class Chat {
 		
 		// States
 		this.curMsg = null;
-		this.idleTimer = null;
+		this.idleTimer = this.retriggerAnimation(this.padding, "blend-out", "blend-in");
 	};
 
 
@@ -95,31 +95,36 @@ class Chat {
 		scrollHeight = this.computor.scrollHeight;
 		
 		msg.numLines = Math.floor(scrollHeight / this.lineHeight);
-		msg.numScroll = Math.floor(scrollHeight / this.maxLinesHeight - 1);
+		msg.numScroll = Math.ceil(scrollHeight / this.maxLinesHeight) - 1;
 		msg.scrollStart = this.maxLinesHeight * -1;
 	};
 
 
 	autoScroll() {
-		if (this.curMsg.numScroll === 0) return;
+		console.log("in autoscroll")
+		if (this.curMsg.numScroll === 0) {
+			return this.dequeue()
+		};
+		console.log("in autoScroll");
 
+		this.padding.style.height = String(this.maxLinesHeight) + "px";
 		this.curMsg.numScroll -= 1;
 		this.curMsg.scrollStart -= this.maxLinesHeight;
 		this.curMsg.scrollEnd -= this.maxLinesHeight;
 
 		this.setCssVar({
-			"--scroll-start": String(this.curMsg.scrollStart) + "px";
-			"--scroll-end":  String(this.curMsg.scrollEnd) + "px";
+			"--scroll-start": String(this.curMsg.scrollStart) + "px",
+			"--scroll-end":  String(this.curMsg.scrollEnd) + "px"
 		})
 
-		this.idleTimer = window.setTimeout(this.autoScroll, 5000);
+		this.idleTimer = window.setTimeout(this.autoScroll,bind(this), 5000);
 	};
 	
 
 	enqueue(msg) {
+		console.log("in enqueue")
 		this.analyze(msg)
 		this.queue.push(msg);
-		
 		if (this.curMsg === null) {
 			clearTimeout(this.idleTimer);
 			this.peak()
@@ -128,45 +133,38 @@ class Chat {
 
 
 	peak() {
+		console.log("in peak", this.queue);
 		this.curMsg = this.queue[0];
 
-		if (this.curMsg) {
-			this.curMsg.innerHTML = this.curMsg.asHTML;
-			this.retriggerAnimation(this.padding, "blend-in", "blend-out");
-			this.autoScroll()
-		};
-
+		this.msg.innerHTML = this.curMsg.asHTML;
+		this.retriggerAnimation(this.padding, "blend-in", "blend-out");
+		this.autoScroll()
 	};
 
 
 	dequeue() {
-		
-		if (this.queue.length > 0) {
-			this.queue.shift();
+		console.log("in dequeue");
+		this.queue.shift();
+		if (this.queue.length > 0) {			
 			this.peak();
 		} else {
 			this.curMsg = null;
-			this.idleTimer = window.setTimeout(this.idle, 5000);
+			this.idleTimer = window.setTimeout(this.idle.bind(this), 5000);
 		};
 	};
 
 
-	idle() {
-		this.retriggerAnimation(this.padding, "blend-out", "blend-in");
-	}
-
-
 	retriggerAnimation(element, in_, out_) {
-	/**
-	 * As stated in the name, this trigger an animation by remove and
-	 * re-adding the "css-animation-class". "in_" and "out_" can be
-	 * one and the same. The main purpose is to re/-trigger an animation.
-	 * @param {string} in_ - Name of the animation to be triggered.
-	 * @param {string} out_ - Name of the animation to be used for flow trigger.
-	 */
+		console.log("in retrigger")
 		element.classList.remove(out_);
 		void element.offsetHeight;
 		element.classList.add(in_);
+	};
+
+
+	idle() {
+		console.log("in idle")
+		this.retriggerAnimation(this.padding, "blend-out", "blend-in");
 	};
 
 
