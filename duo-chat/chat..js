@@ -85,6 +85,7 @@ class Chat {
 			
 		this.computor.style.maxheight = String(this.maxLinesHeight) + "px";
 		this.padding.style.maxHeight = String(this.maxLinesHeight) + "px";
+		this.setCssVar({"--scroll-duration": String(this.maxLinesHeight / 60) + "s"});	
 	};
 
 
@@ -103,9 +104,10 @@ class Chat {
 	autoScroll() {
 		console.log("in autoscroll")
 		if (this.curMsg.numScroll === 0) {
+			this.padding.style.height = "auto";
 			return this.dequeue()
 		};
-		console.log("in autoScroll");
+		console.log("triggering autoScroll");
 
 		this.padding.style.height = String(this.maxLinesHeight) + "px";
 		this.curMsg.numScroll -= 1;
@@ -117,7 +119,8 @@ class Chat {
 			"--scroll-end":  String(this.curMsg.scrollEnd) + "px"
 		})
 
-		this.idleTimer = window.setTimeout(this.autoScroll,bind(this), 5000);
+		this.retriggerAnimation(this.msg, "scroll-down", "scroll-down")
+		this.idleTimer = window.setTimeout(this.autoScroll.bind(this), 5000);
 	};
 	
 
