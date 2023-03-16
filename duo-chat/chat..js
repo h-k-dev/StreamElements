@@ -106,15 +106,8 @@ class Chat {
 
 	autoScroll() {
 		
-		if (this.curMsg.numScroll === 0) {
-			this.padding.style.height = "auto";
-			this.msg.classList.remove("scroll-down");
-			return this.dequeue();
-		};
+		if (this.curMsg.numScroll === 0) return this.dequeue();
 
-		console.log("triggering autoScroll");
-		console.log( this.curMsg.numScroll )
-		console.log([ this.curMsg.scrollStart, this.getcAtr(document.documentElement, "--scroll-len"), this.getcAtr(document.documentElement, "--scroll-start") ]);
 		this.padding.style.height = String(this.maxLinesHeight) + "px";
 		this.curMsg.numScroll -= 1;
 		this.curMsg.scrollStart -= this.maxLinesHeight;
@@ -139,10 +132,19 @@ class Chat {
 
 	peak() {
 		this.curMsg = this.queue[0];
-
-		this.msg.innerHTML = this.curMsg.asHTML;
-		this.retriggerAnimation(this.padding, "blend-in", "blend-out");
-		this.autoScroll()
+		
+		if (this.curMsg.numScroll > 0) {
+			this.padding.style.height = `${this.maxLinesHeight}px`;
+			this.setCssVar({"--scroll-start":  "0px"});
+			this.msg.innerHTML = this.curMsg.asHTML;
+			this.retriggerAnimation(this.padding, "blend-in", "blend-out");
+			this.idleTimer = window.setTimeout(this.autoScroll.bind(this), 5000)
+		} else {
+			this.padding.style.height = "auto";
+			this.msg.innerHTML = this.curMsg.asHTML;
+			this.retriggerAnimation(this.padding, "blend-in", "blend-out");
+			this.dequeue()
+		};	
 	};
 
 
