@@ -3,7 +3,7 @@
 
 :root {
   --scroll-start: 0px;
-  --scroll-end: 0px;
+  --scroll-len: 0px;
   --scroll-duration: 0.5s;
   --lovely-rgb: rgba(43, 42, 41, 0.8);
   --line-height: calc(28 / 24);
@@ -12,7 +12,7 @@
 
 
 body {
-	margin: 0; 
+  	margin: 0; 
 }
 
 .container {
@@ -20,9 +20,9 @@ body {
 
 
 .computation {
-  position: absolute;
-  z-index: -1;
-  max-height: 100%;
+  	position: absolute;
+  	z-index: -1;
+  	max-height: 100%;
 }
 
 
@@ -122,7 +122,7 @@ body {
 
 @keyframes auto-scroll {
   0% {margin-top: var(--scroll-start)}
-  100% {margin-top: var(--scroll-end)}
+  100% {margin-top: calc(var(--scroll-start) - var(--scroll-len))}
 }
 
 @keyframes In {

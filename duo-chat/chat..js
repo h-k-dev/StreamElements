@@ -85,7 +85,10 @@ class Chat {
 			
 		this.computor.style.maxheight = String(this.maxLinesHeight) + "px";
 		this.padding.style.maxHeight = String(this.maxLinesHeight) + "px";
-		this.setCssVar({"--scroll-duration": String(this.maxLinesHeight / 60) + "s"});	
+
+		this.setCssVar({
+			"--scroll-len": String(this.maxLinesHeight) + "px",
+			"--scroll-duration": String(this.maxLinesHeight / 60) + "s"});
 	};
 
 
@@ -97,35 +100,34 @@ class Chat {
 		
 		msg.numLines = Math.floor(scrollHeight / this.lineHeight);
 		msg.numScroll = Math.ceil(scrollHeight / this.maxLinesHeight) - 1;
-		msg.scrollStart = this.maxLinesHeight * -1;
+		msg.scrollStart = this.maxLinesHeight;
 	};
 
 
 	autoScroll() {
-		console.log("in autoscroll")
+		
 		if (this.curMsg.numScroll === 0) {
 			this.padding.style.height = "auto";
-			return this.dequeue()
+			this.msg.classList.remove("scroll-down");
+			return this.dequeue();
 		};
-		console.log("triggering autoScroll");
 
+		console.log("triggering autoScroll");
+		console.log( this.curMsg.numScroll )
+		console.log([ this.curMsg.scrollStart, this.getcAtr(document.documentElement, "--scroll-len"), this.getcAtr(document.documentElement, "--scroll-start") ]);
 		this.padding.style.height = String(this.maxLinesHeight) + "px";
 		this.curMsg.numScroll -= 1;
 		this.curMsg.scrollStart -= this.maxLinesHeight;
-		this.curMsg.scrollEnd -= this.maxLinesHeight;
+		
+		this.setCssVar({"--scroll-start": String(this.curMsg.scrollStart) + "px"})
 
-		this.setCssVar({
-			"--scroll-start": String(this.curMsg.scrollStart) + "px",
-			"--scroll-end":  String(this.curMsg.scrollEnd) + "px"
-		})
-
+		// No animation time involve
 		this.retriggerAnimation(this.msg, "scroll-down", "scroll-down")
 		this.idleTimer = window.setTimeout(this.autoScroll.bind(this), 5000);
 	};
 	
 
 	enqueue(msg) {
-		console.log("in enqueue")
 		this.analyze(msg)
 		this.queue.push(msg);
 		if (this.curMsg === null) {
@@ -136,7 +138,6 @@ class Chat {
 
 
 	peak() {
-		console.log("in peak", this.queue);
 		this.curMsg = this.queue[0];
 
 		this.msg.innerHTML = this.curMsg.asHTML;
@@ -148,9 +149,10 @@ class Chat {
 	dequeue() {
 		console.log("in dequeue");
 		this.queue.shift();
-		if (this.queue.length > 0) {			
-			this.peak();
-		} else {
+		
+		if (this.queue.length > 0) {
+			this.peak() }
+		else {
 			this.curMsg = null;
 			this.idleTimer = window.setTimeout(this.idle.bind(this), 5000);
 		};
@@ -158,7 +160,7 @@ class Chat {
 
 
 	retriggerAnimation(element, in_, out_) {
-		console.log("in retrigger")
+		console.log("Ani", element);
 		element.classList.remove(out_);
 		void element.offsetHeight;
 		element.classList.add(in_);
@@ -166,7 +168,6 @@ class Chat {
 
 
 	idle() {
-		console.log("in idle")
 		this.retriggerAnimation(this.padding, "blend-out", "blend-in");
 	};
 
@@ -177,9 +178,8 @@ class Chat {
 
 
 	setCssVar(obj) {
-		const doc = document.documentElement;
-		for (const [varible, value] in Object.entries(obj)) {
-			doc.style.setProperty(varible, value);
-		}
+		for (const [varName, value] of Object.entries(obj)) {
+			document.documentElement.style.setProperty(varName, value);
+		};
 	};
 };
