@@ -1,4 +1,4 @@
-class Chat {
+class ChatCell {
 /** 
  * @param {obj} - All below param are incl. in the object as `property`
  * @param {string} containerId  - TO DO
@@ -7,8 +7,15 @@ class Chat {
  * @param {string} msgCss - TO DO.
  * @param {string} typographyCss - TO DO.
  * @param {string} computationCss - TO DO.
+ * ------
+ * @param {string} useBionic - TO DO
+ * @param {string} useAutoScroll - TO DO
  * */ 
-	constructor(obj) {	
+	constructor(
+		obj,
+		useBionic = False,
+		useAutoScroll = True
+	) {	
 		// Parent container
 		this.container = document.getElementById(obj["containerId"]);
 
@@ -34,6 +41,10 @@ class Chat {
 		// States
 		this.curMsg = null;
 		this.idleTimer = this.retriggerAnimation(this.padding, "blend-out", "blend-in");
+
+		// Options
+		this.useBionic = useBionic;
+		this.useAutoScroll = useAutoScroll;
 	};
 
 
@@ -132,10 +143,9 @@ class Chat {
 
 	peak() {
 		this.curMsg = this.queue[0];
-		
-		if (this.curMsg.numScroll > 0) {
+		this.msg.classList.remove("scroll-down");
+		if (this.curMsg.numScroll > 0 && this.useAutoScroll) {
 			this.padding.style.height = `${this.maxLinesHeight}px`;
-			this.setCssVar({"--scroll-start":  "0px"});
 			this.msg.innerHTML = this.curMsg.asHTML;
 			this.retriggerAnimation(this.padding, "blend-in", "blend-out");
 			this.idleTimer = window.setTimeout(this.autoScroll.bind(this), 5000)
@@ -149,7 +159,6 @@ class Chat {
 
 
 	dequeue() {
-		console.log("in dequeue");
 		this.queue.shift();
 		
 		if (this.queue.length > 0) {
@@ -162,7 +171,6 @@ class Chat {
 
 
 	retriggerAnimation(element, in_, out_) {
-		console.log("Ani", element);
 		element.classList.remove(out_);
 		void element.offsetHeight;
 		element.classList.add(in_);
