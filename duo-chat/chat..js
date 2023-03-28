@@ -13,8 +13,8 @@ class ChatCell {
  * */ 
 	constructor(
 		obj,
-		useBionic = False,
-		useAutoScroll = True
+		useBionic = false,
+		useAutoScroll = true
 	) {	
 		// Parent container
 		this.container = document.getElementById(obj["containerId"]);
@@ -57,7 +57,7 @@ class ChatCell {
 		this.msg.classList.add(obj["typographyCss"]);
 
 		// Computation relevant elements.
-		this.computor.classList.add(obj["computationCss"], obj["typographyCss"]);
+		this.computor.classList.add(obj["computeCss"], obj["typographyCss"]);
 
 		// Nesting
 		this.scroll.appendChild(this.msg);
