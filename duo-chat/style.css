@@ -6,13 +6,15 @@
   --scroll-len: 0px;
   --scroll-duration: 0.5s;
   --lovely-rgb: rgba(43, 42, 41, 0.8);
-  --line-height: calc(28 / 24);
+  --line-height: calc(1em / 0.32));
   --max-height: 100%;
 }
 
 
 body {
-  	margin: 0; 
+  	margin: 0;
+  	padding-top: 5px;
+  	margin-right: 5px;
 }
 
 .container {
@@ -23,18 +25,21 @@ body {
   	position: absolute;
   	z-index: -1;
   	max-height: 100%;
+  
+	visibility: hidden;
 }
 
 
 .typography {
   /* Typography */
   font-size: {{fontSize}}pt;
-  font-family: {{chatFont}};
-  font-weight: bold;
+  font-family: {{chatFont}}, serif;
+  font-size-adjust: 0.5;
+  font-weight: normal;
   line-height: var(--line-height);
   
   /* Geometry */
-  padding: 0px 1em 0px 1em;
+  padding: 0px {{paddingRight}}px 0px {{paddingLeft}}px;
   
   /* Overflow */
   overflow-wrap: break-word;
@@ -58,9 +63,12 @@ body {
   max-width: {{maxWidth}}%;
   
   /*Coloringg */ 
-  background-color: red;
-  box-shadow: 0 0 10px {{shadowGlow}};
+  background: radial-gradient(
+    circle,
+    rgba(43, 42, 41, 1) 85%,
+    rgba(43, 42, 41, 0.9) 100%);
   border-radius: 20px;
+  opacity: 0.1;
   
   /*overflow */
   overflow: hidden;
@@ -73,7 +81,6 @@ body {
 
   height: 100%;
   flex-direction: row-reverse;
-  background-color: blue;
 
   overflow: hidden;
 }
@@ -103,13 +110,13 @@ body {
 
 
 .blend-in {
-  animation: In 500ms ease;
+  animation: In 500ms ease-out;
   animation-fill-mode: forwards;
 }
 
 
 .blend-out {
-  animation: Out 500ms ease;
+  animation: Out 500ms ease-in-out;
   animation-fill-mode: forwards;
 }
 
@@ -126,8 +133,8 @@ body {
 }
 
 @keyframes In {
-  0% {opacity: 0%}
-  100% {opacity: 100%}
+  0% {opacity: 0%; margin-right: -5px; margin-bottom: -10px}
+  100% {opacity: 100%; margin-right: 0px; margin-bottom: 0px}
 }
 
 @keyframes Out {
