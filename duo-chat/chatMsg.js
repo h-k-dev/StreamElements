@@ -64,7 +64,7 @@ let testData = {
 
 
 class chatMsg {
-	constructor(data, emoteCss, typographyCss, bionicCss = null) {
+	constructor(data, emoteCss, bionicCss, typographyCss) {
 		//
 		this.numLines = null;
 		this.numScroll = null;
