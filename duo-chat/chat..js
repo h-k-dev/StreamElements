@@ -6,7 +6,8 @@ class ChatCell {
  * @param {string} scrollCss - TO DO.
  * @param {string} msgCss - TO DO.
  * @param {string} typographyCss - TO DO.
- * @param {string} computationCss - TO DO.
+ * @param {string} compareCss - TO DO.
+ * @param {string} computeCss - TO DO.
  * ------
  * @param {string} useBionic - TO DO
  * @param {string} useAutoScroll - TO DO
@@ -26,8 +27,10 @@ class ChatCell {
 
 		// Computation relevant elements.
 		this.computor = document.createElement("div");
+		this.comparor = document.createElement("div");
 
 		// Computed Attr
+		this.sandBoxError = 4;
 		this.lineHeight = null;
 		this.maxNumlines = null;
 		this.maxLinesHeight = null;
@@ -43,6 +46,7 @@ class ChatCell {
 		this.idleTimer = this.retriggerAnimation(this.padding, "blend-out", "blend-in");
 
 		// Options
+		this.allowNumLines = 3;
 		this.useBionic = useBionic;
 		this.useAutoScroll = useAutoScroll;
 	};
@@ -57,13 +61,15 @@ class ChatCell {
 		this.msg.classList.add(obj["typographyCss"]);
 
 		// Computation relevant elements.
-		this.computor.classList.add(obj["computeCss"], obj["typographyCss"]);
+		this.comparor.classList.add(obj["compareCss"], obj["typographyCss"]);
+		this.computor.classList.add(obj["computeCss"], obj["typographyCss"], obj["paddingCss"])
 
 		// Nesting
 		this.scroll.appendChild(this.msg);
 		this.padding.appendChild(this.scroll);
 		this.container.appendChild(this.padding);
 
+		document.body.appendChild(this.comparor);
 		document.body.appendChild(this.computor);
 	};
 
@@ -88,13 +94,14 @@ class ChatCell {
 		let height;
 		
 		// Adding testing content
-		this.computor.innerHTML = testStr;
+		this.comparor.innerHTML = testStr;
 
-		height = this.computor.clientHeight - paddingTop - paddingBot;
+		height = this.comparor.clientHeight - paddingTop - paddingBot - this.sandBoxError;
 		this.maxNumlines = Math.floor(height / this.lineHeight);
 		this.maxLinesHeight = this.maxNumlines * this.lineHeight;
 			
-		this.computor.style.maxheight = String(this.maxLinesHeight) + "px";
+		this.comparor.style.maxheight = String(this.maxLinesHeight) + "px";
+		this.computor.style.maxheight = String(this.maxLinesHeight + paddingTop + paddingBot + this.sandBoxError) + "px";
 		this.padding.style.maxHeight = String(this.maxLinesHeight) + "px";
 
 		this.setCssVar({
@@ -104,13 +111,17 @@ class ChatCell {
 
 
 	analyze(msg) {
-		let scrollHeight;			
+		const paddingTop = parseInt(this.getcAtr(this.padding, "padding-top"));
+		const paddingBot = parseInt(this.getcAtr(this.padding, "padding-bottom"));
+		let scrollHeight, _scrollHeight;			
 
+		this.comparor.innerHTML = msg.asHTML;
 		this.computor.innerHTML = msg.asHTML;
-		scrollHeight = this.computor.scrollHeight;
+		_scrollHeight = this.computor.scrollHeight - paddingTop - paddingBot - this.sandBoxError;
+		scrollHeight = this.comparor.scrollHeight;
 		
 		msg.numLines = Math.floor(scrollHeight / this.lineHeight);
-		msg.numScroll = Math.ceil(scrollHeight / this.maxLinesHeight) - 1;
+		msg.numScroll = Math.ceil(_scrollHeight / this.maxLinesHeight) - 1;
 		msg.scrollStart = this.maxLinesHeight;
 	};
 
@@ -133,6 +144,9 @@ class ChatCell {
 
 	enqueue(msg) {
 		this.analyze(msg)
+		
+		if (msg.numLines < 3) return;
+
 		this.queue.push(msg);
 		if (this.curMsg === null) {
 			clearTimeout(this.idleTimer);
@@ -148,7 +162,7 @@ class ChatCell {
 			this.padding.style.height = `${this.maxLinesHeight}px`;
 			this.msg.innerHTML = this.curMsg.asHTML;
 			this.retriggerAnimation(this.padding, "blend-in", "blend-out");
-			this.idleTimer = window.setTimeout(this.autoScroll.bind(this), 5000)
+			this.idleTimer = window.setTimeout(this.autoScroll.bind(this), 7000)
 		} else {
 			this.padding.style.height = "auto";
 			this.msg.innerHTML = this.curMsg.asHTML;
