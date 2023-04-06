@@ -65,7 +65,10 @@ let testData = {
 
 class chatMsg {
 	constructor(data, emoteCss, bionicCss, typographyCss) {
-		//
+		// Data related
+		this.data = data;
+		
+		// Interactive properties
 		this.numLines = null;
 		this.numScroll = null;
 		this.scrollStart = null;
@@ -73,7 +76,7 @@ class chatMsg {
 		this.lifeSpan = null;
 		
 		// Css
-		this.data = data;
+
 		this.typographyCss = typographyCss;
 		this.emoteCss = emoteCss;
 		this.bionicCss = bionicCss;
@@ -183,3 +186,6 @@ class chatMsg {
 	get nick() {return this.data.nick}
 	get displayName() {return this.data.displayName};
 };
+
+const m = new chatMsg(testData)
+console.log(m.asHTML)

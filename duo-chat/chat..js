@@ -30,7 +30,7 @@ class ChatCell {
 		this.comparor = document.createElement("div");
 
 		// Computed Attr
-		this.sandBoxError = 4;
+		this.sandBoxError = 3;
 		this.lineHeight = null;
 		this.maxNumlines = null;
 		this.maxLinesHeight = null;
@@ -91,19 +91,21 @@ class ChatCell {
 		const testStr = "W".repeat(maxNumChar);
 		const paddingTop = parseInt(this.getcAtr(this.padding, "padding-top"));
 		const paddingBot = parseInt(this.getcAtr(this.padding, "padding-bottom"));
-		let height;
 		
 		// Adding testing content
+		this.padding.dataset.username = "USERNAME";
 		this.comparor.innerHTML = testStr;
 
-		height = this.comparor.clientHeight - paddingTop - paddingBot - this.sandBoxError;
+		const usernameHeight = Math.ceil(parseFloat(window.getComputedStyle(this.padding, ':before').height));
+		const height = this.comparor.clientHeight - paddingTop - paddingBot - this.sandBoxError - usernameHeight;
+
 		this.maxNumlines = Math.floor(height / this.lineHeight);
 		this.maxLinesHeight = this.maxNumlines * this.lineHeight;
 			
 		this.comparor.style.maxheight = String(this.maxLinesHeight) + "px";
 		this.computor.style.maxheight = String(this.maxLinesHeight + paddingTop + paddingBot + this.sandBoxError) + "px";
 		this.padding.style.maxHeight = String(this.maxLinesHeight) + "px";
-
+		console.log("test", window.getComputedStyle(this.padding, ':before').height);
 		this.setCssVar({
 			"--scroll-len": String(this.maxLinesHeight) + "px",
 			"--scroll-duration": String(this.maxLinesHeight / 60) + "s"});
@@ -145,7 +147,7 @@ class ChatCell {
 	enqueue(msg) {
 		this.analyze(msg)
 		
-		if (msg.numLines < 3) return;
+		if (msg.numLines < this.allowNumLines) return;
 
 		this.queue.push(msg);
 		if (this.curMsg === null) {
@@ -158,6 +160,7 @@ class ChatCell {
 	peak() {
 		this.curMsg = this.queue[0];
 		this.msg.classList.remove("scroll-down");
+		this.changeUsernameTo(this.curMsg.displayName);
 		if (this.curMsg.numScroll > 0 && this.useAutoScroll) {
 			this.padding.style.height = `${this.maxLinesHeight}px`;
 			this.msg.innerHTML = this.curMsg.asHTML;
@@ -171,6 +174,10 @@ class ChatCell {
 		};	
 	};
 
+	changeUsernameTo(newUsername) {
+		if (this.padding.dataset.username === this.curMsg.displayName) return;
+		this.padding.dataset.username = this.curMsg.displayName;
+	};
 
 	dequeue() {
 		this.queue.shift();
