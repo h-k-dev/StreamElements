@@ -103,16 +103,26 @@ class DuoChat {
 
 	peak() {
 		this.curMsg = this.queue[0];
-		console.log(this.curMsg)
+
+		chatCell = this.chatCell
+		
+		
 		// this.changeUsernameTo(this.curMsg.displayName);
 
 		this.dequeue()
 	};
 
 	
-	getKuroOrShiro(state){
-		if (state === -1) return this.kuro	
-		else if (state === 1) return this.shiro
+	get chatCell() {
+		if (this.kuroOrShiro === -1) {
+			element = this.kuro;
+		}	
+		else if (this.kuroOrShiro === 1) {
+			element = this.shiro;
+		};
+
+		this.kuroOrShiro *= -1;
+		return element
 	};
 
 
