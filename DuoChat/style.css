@@ -1,0 +1,136 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css');
+@import url('https://fonts.googleapis.com/css?family={{chatFont}}');
+
+:root {
+  --scroll-start: 0px;
+  --scroll-len: 0px;
+  --scroll-duration: 0.5s;
+  --lovely-rgb: rgba(43, 42, 41, 0.8);
+  --line-height: calc(28 / 24);
+  --max-height: 100%;
+}
+
+
+body {
+  	margin: 0; 
+}
+
+.container {
+}
+
+
+.computation {
+  	position: absolute;
+  	z-index: -1;
+  	max-height: 100%;
+}
+
+
+.typography {
+  /* Typography */
+  font-size: {{fontSize}}pt;
+  font-family: {{chatFont}};
+  font-weight: bold;
+  line-height: var(--line-height);
+  
+  /* Geometry */
+  padding: 0px 1em 0px 1em;
+  
+  /* Overflow */
+  overflow-wrap: break-word;
+  word-break: break-all;
+  overflow: hidden;
+}
+
+
+
+.padding {
+  /* Positioning */
+  display: inline-flex;
+  float: right;
+  
+  /*Geometry */
+  padding-top: {{paddingTop}}px;
+  padding-bottom: {{paddingBot}}px;
+  
+  /*Dimension */
+  max-height: 100px;
+  max-width: {{maxWidth}}%;
+  
+  /*Coloringg */ 
+  background-color: red;
+  box-shadow: 0 0 10px {{shadowGlow}};
+  border-radius: 20px;
+  
+  /*overflow */
+  overflow: hidden;
+}
+
+
+.scroll {
+  display: inline-flex;
+  flex: 0 auto;
+
+  height: 100%;
+  flex-direction: row-reverse;
+  background-color: blue;
+
+  overflow: hidden;
+}
+
+
+.message {
+  display: inline-block;
+  flex: 0 auto;
+  
+  color: {{chatMsgColor}};
+}
+
+
+.bionic {
+  /* Typography */
+  font-weight: normal; 
+  opacity: 65%
+}
+
+
+.emote {
+  vertical-align: middle;
+  background-repeat: no-repeat;
+}
+
+
+
+
+.blend-in {
+  animation: In 500ms ease;
+  animation-fill-mode: forwards;
+}
+
+
+.blend-out {
+  animation: Out 500ms ease;
+  animation-fill-mode: forwards;
+}
+
+
+.scroll-down {
+  animation: auto-scroll var(--scroll-duration) ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+
+@keyframes auto-scroll {
+  0% {margin-top: var(--scroll-start)}
+  100% {margin-top: calc(var(--scroll-start) - var(--scroll-len))}
+}
+
+@keyframes In {
+  0% {opacity: 0%}
+  100% {opacity: 100%}
+}
+
+@keyframes Out {
+  0% {opacity: 100%}
+  100% {opacity: 0%}
+}
