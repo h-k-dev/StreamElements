@@ -1,1 +1,2 @@
-# StreamElements-Widget: Vanilla JS + JQuery 
+StreamElements-Widgets feature Vanilla JS, CSS, HTML
+
