@@ -103,9 +103,8 @@ class DuoChat {
 
 	peak() {
 		this.curMsg = this.queue[0];
-
-		chatCell = this.chatCell
-		
+		curChatCell = this.cycleChatCell;
+		nextChatCell = this.cycleChatCell;
 		
 		// this.changeUsernameTo(this.curMsg.displayName);
 
@@ -113,7 +112,7 @@ class DuoChat {
 	};
 
 	
-	get chatCell() {
+	get cycleChatCell() {
 		if (this.kuroOrShiro === -1) {
 			element = this.kuro;
 		}	
