@@ -31,8 +31,8 @@ class DuoChat {
 		
 		// States
 		this.kuroOrShiro = -1  // -1 for kuro and 1 for shiro
-		this.kuroMsg = null;
-		this.shiroMsg = null;
+		this.kuroUsername = null;
+		this.shiroUsername = null;
 		this.kuroIdleTimer = null;
 		this.shiroIdleTimer = null;
 		// this.retriggerAnimation(this.kuro, "blend-out", "blend-in");
