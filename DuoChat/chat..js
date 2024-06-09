@@ -103,6 +103,7 @@ class DuoChat {
 
 	peak() {
 		this.curMsg = this.queue[0];
+
 		curChatCell = this.cycleChatCell;
 		nextChatCell = this.cycleChatCell;
 		

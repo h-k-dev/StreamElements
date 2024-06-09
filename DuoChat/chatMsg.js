@@ -29,7 +29,7 @@ let testData = {
 		}
 	],
 	"channel": "channelname",
-	"text": "Why Kappa test Kappa test",
+	"text": "Why Kappa Goodo Jobbbbuuuu Kappa test",
 	"isAction": false,
 	"emotes": [
 		{
@@ -73,16 +73,15 @@ class chatMsg {
 		this.numScroll = null;
 		this.scrollStart = null;
 		this.scrollEnd = 0;
-		this.lifeSpan = null;
+		this.lifeSpan = 0;
 		
 		// Css
-
 		this.typographyCss = typographyCss;
 		this.emoteCss = emoteCss;
 		this.bionicCss = bionicCss;
 		
 		// Compute
-		this._msg = []
+		this.msgComponents = []
 		this.trueStrIdx = []
 		this.asHTML = null
 		
@@ -95,8 +94,8 @@ class chatMsg {
 		if (this.asHTML) return;
 
 		// No emotes
-		if (data.emotes.length === 0) {	
-			this._msg.push(data.text);
+		if (chatMsg.isEmptyObject(data.emotes)) {
+			this.msgComponents.push(data.text);
 			this.trueStrIdx.push(0);
 			this.toHTML();
 			return
@@ -104,28 +103,28 @@ class chatMsg {
 	  
 		// With emotes
 		let emotes = data.emotes,
-			lastEnd = 0,
+			previousEndingIndex = 0,
 			idx = 0;
 	  
 		// Create an img-tag for each emote
 		for (let i = 0; i < emotes.length; i++) {
 			let emoteImgUrl = emotes[i].urls[1],
-				start = emotes[i].start;
+				startIndex = emotes[i].start;
 	  
-			if (start !== 0) {
-				this._msg.push(data.text.slice(lastEnd, start - 1));
+			if (startIndex !== 0) {
+				this.msgComponents.push(data.text.slice(previousEndingIndex, startIndex - 1));
 				this.trueStrIdx.push(idx);
 				idx++
 			};
 	  
-			this._msg.push(`<img class="${this.emoteCss}" src="${emoteImgUrl}">`);
-			lastEnd = emotes[i].end + 1;
+			this.msgComponents.push(`<img class="${this.emoteCss}" src="${emoteImgUrl}">`);
+			previousEndingIndex = emotes[i].end + 1;
 			idx++
 		};
 	  
 		// Push last text trail
-		if (lastEnd < data.text.length) {
-		  	this._msg.push(data.text.slice(lastEnd, data.text.length));
+		if (previousEndingIndex < data.text.length) {
+		  	this.msgComponents.push(data.text.slice(previousEndingIndex, data.text.length));
 			this.trueStrIdx.push(idx);
 		};
 
@@ -166,14 +165,20 @@ class chatMsg {
 		for (let i = 0; i < this.trueStrIdx.length; i++) {
 			let idx = this.trueStrIdx[i];
 			if (this.bionicCss) {
-				this._msg[idx] = this.toBionic(this._msg[idx]);
+				this.msgComponents[idx] = this.toBionic(this.msgComponents[idx]);
 			} else {
-				this._msg[idx] = this.htmlEncode(this._msg[idx])
+				this.msgComponents[idx] = this.htmlEncode(this.msgComponents[idx])
 			};
 		};
 
-		this.asHTML = this._msg.join("");
+		this.asHTML = this.msgComponents.join("");
 	};
+
+
+	static isEmptyObject(obj) {
+		return Object.keys(obj).length === 0 && obj.constructor === Object;
+	};
+
 
 
 	get hasText() {
@@ -188,4 +193,4 @@ class chatMsg {
 };
 
 const m = new chatMsg(testData)
-console.log(m.asHTML)
+console.log(m.asHTML) 

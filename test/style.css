@@ -1,0 +1,76 @@
+:root {
+    --lovely-rgb: rgba(43, 42, 41, 0.8);
+    
+    --line-height: calc(1ex / 0.32);
+    
+    --max-height: 100%;
+    --border-width: 1.5em;
+    --gap: 1px;
+    
+    --sandbox-error-top: 3px;
+  }
+
+
+.vertical-filler{
+    height: 100%;
+}
+
+
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+
+
+.container {
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 50% 50%;
+    width: 500px;
+    height: 500px;
+    padding: 0;
+    margin: 0;
+}
+
+
+.kuro, .shiro {
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+}
+
+
+.kuro {
+    background-color: black;
+    color: white;
+    height: 100%;
+}
+
+
+.shiro {
+    background-color: beige;
+    height: 100%;
+}
+
+.content {
+    display: inline-block;
+    background-color: green;
+}
+
+
+.typography {
+    /* Typography */
+    font-size: 14pt;
+    /*font-size-adjust: 0.5;*/
+    font-weight: 100;
+    /* line-height: var(--line-height);*/
+
+    /* Overflow */
+    /* white-space: pre-wrap; */
+    word-break: break-word;
+    overflow: hidden;
+}
+
+
